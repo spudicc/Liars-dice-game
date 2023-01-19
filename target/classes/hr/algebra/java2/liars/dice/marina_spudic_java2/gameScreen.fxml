@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.liars.dice.marina_spudic_java2.GameScreenController">
+   <children>
+      <AnchorPane fx:id="apGameMoves" layoutX="35.0" layoutY="305.0" prefHeight="91.0" prefWidth="538.0">
+         <children>
+            <Button fx:id="btnCallBluff" layoutX="269.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCallBluff" text="Call bluff" />
+            <Label layoutX="133.0" layoutY="14.0" text="Opponent says there are ..." />
+            <Label fx:id="lbOpponentsMove" layoutX="381.0" layoutY="14.0" prefHeight="17.0" prefWidth="30.0" />
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnRollDice" layoutX="361.0" layoutY="80.0" mnemonicParsing="false" onAction="#onRollDicePressed" style="-fx-background-color: black;" text="Roll dice" textFill="WHITE" />
+      <AnchorPane fx:id="apPlayer" layoutX="6.0" layoutY="451.0" prefHeight="200.0" prefWidth="612.0">
+         <children>
+            <ImageView fx:id="playerDiceImageOne" fitHeight="50.0" fitWidth="50.0" layoutX="150.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../assets/dice1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="playerDiceImageTwo" fitHeight="50.0" fitWidth="50.0" layoutX="211.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../assets/dice1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="playerDiceImageThree" fitHeight="50.0" fitWidth="50.0" layoutX="274.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../assets/dice1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="playerDiceImageFour" fitHeight="50.0" fitWidth="50.0" layoutX="336.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../assets/dice1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="playerDiceImageFive" fitHeight="50.0" fitWidth="50.0" layoutX="399.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../assets/dice1.png" />
+               </image>
+            </ImageView>
+            <ChoiceBox fx:id="playerNumberChoiceBox" layoutX="211.0" layoutY="24.0" prefHeight="25.0" prefWidth="62.0" />
+            <ChoiceBox fx:id="playerDiceChoiceBox" layoutX="368.0" layoutY="24.0" prefHeight="25.0" prefWidth="62.0" />
+            <Button fx:id="btnPlayerBidHigher" layoutX="289.0" layoutY="59.0" mnemonicParsing="false" onAction="#onBidHigher" text="Bid higher" />
+         </children>
+      </AnchorPane>
+      <MenuBar layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="212.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem fx:id="startGame" mnemonicParsing="false" onAction="#startGame" text="Start new game" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveGame" text="Save game" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadGame" text="Load game" />
+               </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Documentation">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#generateDocumentation" text="Generate documentation" />
+                  <MenuItem mnemonicParsing="false" onAction="#generateXML" text="Generate XML" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TextArea fx:id="taChatArea" editable="false" layoutX="594.0" layoutY="48.0" prefHeight="342.0" prefWidth="170.0" />
+      <TextField fx:id="tfChatMessage" layoutX="594.0" layoutY="396.0" prefHeight="25.0" prefWidth="170.0" promptText="I know you want to flame.." />
+      <Button fx:id="btnSendMessage" layoutX="702.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="62.0" text="Send" />
+   </children>
+</AnchorPane>
