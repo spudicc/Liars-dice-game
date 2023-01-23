@@ -1,8 +1,11 @@
 package hr.algebra.java2.liars.dice.marina_spudic_java2;
 
 import hr.algebra.java2.liars.dice.marina_spudic_java2.model.Client;
+import hr.algebra.java2.liars.dice.marina_spudic_java2.model.GameMetaData;
 import hr.algebra.java2.liars.dice.marina_spudic_java2.model.SerializableDice;
+import hr.algebra.java2.liars.dice.marina_spudic_java2.model.TransferData;
 import hr.algebra.java2.liars.dice.marina_spudic_java2.rmi.RemoteService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -89,24 +92,35 @@ public class GameScreenController {
     private static final String xmlPath = "D:\\java2xmlfile.xml";
     public static Client client;
 
+    private GameMetaData gameMetaData;
+
+    public static void disableStaticUI(TransferData transferData) {
+        Platform.runLater(() -> {
+            transferData.getBtnBidHigher().setDisable(true);
+            transferData.getBtnBidHigher().setText("Waiting for another player...");
+            transferData.getLbOpponentsMove().setText(" ");
+            transferData.getBtnCallBluff().setDisable(true);
+        });
+    }
+
     public void initialize() throws NotBoundException, RemoteException {
-        client.listenForGameReady();
-
-
-        lastNumberBid = 0;
+        client.listenForGameReady(new TransferData(btnCallBluff, btnPlayerBidHigher, lbOpponentsMove, playerNumberChoiceBox));
+        gameMetaData = client.getGameMetaData();
         playerDices = new ArrayList<>();
         playerDiceIW = new ImageView[DICES];
 
         allDices = new ArrayList<>();
         initNodes();
-        numberOfDices = new HashMap<>(){{
-            put(1, 0);
-            put(2, 0);
-            put(3, 0);
-            put(4, 0);
-            put(5, 0);
-            put(6, 0);
-        }};
+        numberOfDices = new HashMap<>();
+
+        numberOfDices.put(1, 0);
+        numberOfDices.put(2, 0);
+        numberOfDices.put(3, 0);
+        numberOfDices.put(4, 0);
+        numberOfDices.put(5, 0);
+        numberOfDices.put(6, 0);
+
+
         List<Integer> numbers = new ArrayList<>();
         for (int i = 1; i <= DICES; i++) {
             numbers.add(i);
@@ -117,10 +131,11 @@ public class GameScreenController {
         }
         playerDiceChoiceBox.setItems(FXCollections.observableList(numbers));
         playerNumberChoiceBox.setItems(FXCollections.observableList(numberOfChoices));
-        apGameMoves.setVisible(false);
 
         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
         stub = (RemoteService) registry.lookup(RemoteService.REMOTE_OBJECT_NAME);
+
+        rollDice();
     }
     private void initNodes() {
         apNodes = new ArrayList<>();
@@ -133,113 +148,121 @@ public class GameScreenController {
             }
         }
     }
-    public void onRollDicePressed() {
-        for (ImageView dice:allDices) {
+    public void rollDice() {
+        for (ImageView dice : allDices) {
             int randomDice = random.nextInt(6) + 1;
             File file = new File("src/main/resources/assets/dice" + randomDice + ".png");
             dice.setImage(new Image(file.toURI().toString()));
             numberOfDices.put(randomDice, numberOfDices.get(randomDice) + 1);
-                playerDices.add(randomDice);
+            playerDices.add(randomDice);
         }
-        btnRollDice.setVisible(false);
-        setStage();
+        //System.out.println(client.getGameMetaData().getNumberOfDices());
     }
 
     private void setStage() {
-        /*
-        if (playerOneTurn){
-            apPlayerOne.setVisible(true);
-            apPlayerTwo.setVisible(false);
-        }
-        else{
-            apPlayerOne.setVisible(false);
-            apPlayerTwo.setVisible(true);
-        }*/
-        if (lastNumberBid == 0 && lastDiceBid == 0)
-        {
-            apGameMoves.setVisible(false);
-        }
-        else{
-            apGameMoves.setVisible(true);
-        }
+        apGameMoves.setVisible(true);
+
+        int lastNumberBid = client.getGameMetaData().getNumberBids().get(client.getGameMetaData().getNumberBids().size() - 1);
+        int lastDiceBid = client.getGameMetaData().getDiceBids().get(client.getGameMetaData().getDiceBids().size() - 1);
+
         lbOpponentsMove.setText(lastNumberBid + " dices of number " + lastDiceBid);
     }
 
     public void onBidHigher(){
-        //if (playerOneTurn) {
-            if (playerNumberChoiceBox.getValue() == null || playerDiceChoiceBox.getValue() == null)
-            {
-                System.out.println("U gotta pick");
-                return;
-                // dodati onaj info window
-            }
-            lastNumberBid = (int) playerNumberChoiceBox.getValue();
-            lastDiceBid = (int) playerDiceChoiceBox.getValue();
-        //}
-        /*else{
-            if (playerTwoNumberChoiceBox.getValue() == null || playerTwoDiceChoiceBox.getValue() == null)
-            {
-                System.out.println("U gotta pick");
-                return;
-                // dodati onaj info window
-            }
-            lastNumberBid = (int) playerTwoNumberChoiceBox.getValue();
-            lastDiceBid = (int) playerTwoDiceChoiceBox.getValue();
-        }*/
-        setChoiceBoxValues();
+        if (playerNumberChoiceBox.getValue() == null || playerDiceChoiceBox.getValue() == null) {
+            System.out.println("U gotta pick");
+            return;
+        }
+        lastNumberBid = (int) playerNumberChoiceBox.getValue();
+        lastDiceBid = (int) playerDiceChoiceBox.getValue();
+
         try {
-            client.sendTurn();
+            client.getGameMetaData().setNumberOfDices(numberOfDices);
+            client.sendTurn(lastNumberBid, lastDiceBid);
+            disableUI();
+            System.out.println(client.getGameMetaData().getNumberOfDices());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        playerOneTurn = !playerOneTurn;
-        setStage();
+    }
+
+    private void disableUI(){
+        btnPlayerBidHigher.setDisable(true);
+        btnPlayerBidHigher.setText("Waiting for another player...");
+        lbOpponentsMove.setText(" ");
+        btnCallBluff.setDisable(true);
+        playerDiceChoiceBox.setValue(" ");
+
+    }
+
+    public static void enableUI(TransferData transferData){
+        Platform.runLater(() -> {
+            transferData.getBtnBidHigher().setDisable(false);
+            transferData.getBtnBidHigher().setText("Bid higher");
+            if (client.getGameMetaData().getNumberBids().size() != 0){
+                int lastNumberBid = client.getGameMetaData().getNumberBids().get(client.getGameMetaData().getNumberBids().size() - 1);
+                int lastDiceBid = client.getGameMetaData().getDiceBids().get(client.getGameMetaData().getDiceBids().size() - 1);
+                transferData.getLbOpponentsMove().setText(lastNumberBid + " dices of number " + lastDiceBid);
+                List<Integer> availableChoices = new ArrayList<>();
+                for (int i = lastNumberBid; i < CHOICES; i++){
+                    availableChoices.add(i);
+                }
+                transferData.getCbLastNumberBid().setItems(FXCollections.observableList(availableChoices));
+            }
+            transferData.getBtnCallBluff().setDisable(false);
+        });
     }
 
     private void setChoiceBoxValues() {
         playerNumberChoiceBox.getItems().clear();
+
+        int lastNumberBid = client.getGameMetaData().getNumberBids().get(client.getGameMetaData().getNumberBids().size() - 1);
         List<Integer> availableChoices = new ArrayList<>();
-        for (int i = lastNumberBid+1; i < CHOICES; i++) {
+        for (int i = lastNumberBid; i < CHOICES; i++){
             availableChoices.add(i);
         }
         playerNumberChoiceBox.setItems(FXCollections.observableList(availableChoices));
     }
 
     public void onCallBluff(){
-        if (numberOfDices.get(lastDiceBid) < lastNumberBid)
+        checkWinner();
+    }
+
+    private void checkWinner() {
+        if (gameMetaData.getNumberOfDices().get(lastDiceBid) < lastNumberBid)
         {
-            if (playerOneTurn) {
-                displayVictoryDialog(HelloController.getPlayerInfo().getPlayerName());
-                HelloController.getPlayerInfo().recordNewVictory();
-            } else {
-                displayVictoryDialog(HelloController.getPlayerInfo().getPlayerName());
-                HelloController.getPlayerInfo().recordNewVictory();
-            }
+            displayVictoryDialog();
         }
         else
         {
-            if (playerOneTurn) {
-                displayDefeatDialog(HelloController.getPlayerInfo().getPlayerName());
-                HelloController.getPlayerInfo().recordNewVictory();
-            } else {
-                displayDefeatDialog(HelloController.getPlayerInfo().getPlayerName());
-                HelloController.getPlayerInfo().recordNewVictory();
-            }
+            displayDefeatDialog();
         }
     }
 
-    private static void displayVictoryDialog(String winnerName){
+    private static void displayVictoryDialog(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("They really bluffed!");
-        alert.setContentText("Player " + winnerName + " wins!");
+        alert.setContentText("Player " + (client.getGameMetaData().isPlayerOneTurn() ? client.getGameMetaData().getPlayerOneData().getPlayerName() : client.getGameMetaData().getPlayerTwoData().getPlayerName()) + " wins!");
+
+        if (client.getGameMetaData().isPlayerOneTurn()) {
+            client.getGameMetaData().getPlayerOneData().recordNewVictory();
+        } else {
+            client.getGameMetaData().getPlayerTwoData().recordNewVictory();
+        }
 
         alert.showAndWait();
     }
 
-    private static void displayDefeatDialog(String winnerName){
+    private static void displayDefeatDialog(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("It seems like they didn't lie.");
-        alert.setContentText("Player " + winnerName + " wins!");
+        alert.setContentText("Player " + (client.getGameMetaData().isPlayerOneTurn() ? client.getGameMetaData().getPlayerTwoData().getPlayerName() : client.getGameMetaData().getPlayerOneData().getPlayerName()) + " wins!");
+
+        if (client.getGameMetaData().isPlayerOneTurn()) {
+            client.getGameMetaData().getPlayerTwoData().recordNewVictory();
+        } else {
+            client.getGameMetaData().getPlayerOneData().recordNewVictory();
+        }
 
         alert.showAndWait();
     }
@@ -289,13 +312,11 @@ public class GameScreenController {
             };
             setStage();
             setChoiceBoxValues();
-            btnRollDice.setVisible(false);
     }
-
 
     public void sendMessage() throws RemoteException {
         String message = tfChatMessage.getText();
-        stub.sendMessage(message, HelloController.getPlayerInfo().getPlayerName());
+        stub.sendMessage(message, client.getGameMetaData().isPlayerOneTurn() ? client.getGameMetaData().getPlayerOneData().getPlayerName() : client.getGameMetaData().getPlayerTwoData().getPlayerName());
         String conversation = stub.receiveConversation();
         taChatArea.setText(conversation);
     }

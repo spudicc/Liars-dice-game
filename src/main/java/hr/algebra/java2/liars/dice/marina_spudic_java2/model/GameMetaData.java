@@ -1,53 +1,41 @@
 package hr.algebra.java2.liars.dice.marina_spudic_java2.model;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.*;
 
 public class GameMetaData implements Serializable {
     private PlayerData playerOneData;
     private PlayerData playerTwoData;
-
-    //private int lastNumberBid;
-
-    //private int lastDiceBid;
+    private List<Integer> numberBids;
+    private List<Integer> diceBids;
 
     private Map<Integer, Integer> numberOfDices;
 
     // iz ove mape mogu iscitavati lastnumberbid i lastdice bid, ne trebaju mi gore zakomentirani propsi
-    private Map<Integer, Integer> gameMoves;
+    //private Map<Integer, Integer> gameMoves;
 
     private boolean playerOneTurn;
-    private boolean gameReady;
-
-    public GameMetaData() {
-        playerOneTurn = true;
-    }
 
     public void setPlayerOneTurn(boolean playerOneTurn) {
         this.playerOneTurn = playerOneTurn;
     }
 
-    public GameMetaData(boolean gameReady) {
+    public GameMetaData() {
         playerOneTurn = true;
-        this.gameReady = gameReady;
-    }
-
-    public GameMetaData(PlayerData playerOneData, PlayerData playerTwoData) {
-        this.playerOneData = playerOneData;
-        this.playerTwoData = playerTwoData;
+        this.numberBids = new ArrayList<>();
+        this.diceBids = new ArrayList<>();
+        this.numberOfDices = new HashMap<>();
+        this.numberOfDices.put(1, 0);
+        this.numberOfDices.put(2, 0);
+        this.numberOfDices.put(3, 0);
+        this.numberOfDices.put(4, 0);
+        this.numberOfDices.put(5, 0);
+        this.numberOfDices.put(6, 0);
     }
 
     @Override
     public String toString() {
-        return "Gamemetadata Player one " + playerOneTurn;
-    }
-
-    public boolean isGameReady() {
-        return gameReady;
-    }
-
-    public void setGameReady(boolean gameReady) {
-        this.gameReady = gameReady;
+        return "Gamemetadata Player one " + playerOneTurn + playerOneData + " second: " + playerTwoData;
     }
 
     public boolean isPlayerOneTurn() {
@@ -75,14 +63,32 @@ public class GameMetaData implements Serializable {
     }
 
     public void setNumberOfDices(Map<Integer, Integer> numberOfDices) {
-        this.numberOfDices = numberOfDices;
+        int diceCounter = 0;
+        for (Map.Entry<Integer, Integer> entry:
+                this.numberOfDices.entrySet()) {
+            diceCounter += entry.getValue();
+        }
+        if (diceCounter < 10)
+        {
+            for (Map.Entry<Integer, Integer> newEntry: numberOfDices.entrySet()) {
+                this.numberOfDices.put(newEntry.getKey(), (this.numberOfDices.get(newEntry.getKey()) + newEntry.getValue()));
+            }
+        }
     }
 
-    public Map<Integer, Integer> getGameMoves() {
-        return gameMoves;
+    public List<Integer> getNumberBids() {
+        return numberBids;
     }
 
-    public void setGameMoves(Map<Integer, Integer> gameMoves) {
-        this.gameMoves = gameMoves;
+    public void setNumberBids(int numberBid) {
+        this.numberBids.add(numberBid);
+    }
+
+    public List<Integer> getDiceBids() {
+        return diceBids;
+    }
+
+    public void setDiceBids(int diceBid) {
+        this.diceBids.add(diceBid);
     }
 }

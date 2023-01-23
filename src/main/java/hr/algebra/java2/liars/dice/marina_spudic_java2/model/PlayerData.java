@@ -8,8 +8,11 @@ public class PlayerData implements Serializable {
     private long playerId;
     private List<Integer> playerDices;
 
+    private int playerVictories;
+
     public PlayerData(String playerName) {
         this.playerId = ProcessHandle.current().pid();
+        this.playerVictories = 0;
         this.playerName = playerName;
     }
 
@@ -23,5 +26,25 @@ public class PlayerData implements Serializable {
 
     public long getPlayerId() {
         return playerId;
+    }
+    public List<Integer> getPlayerDices() {
+        return playerDices;
+    }
+
+    public void setPlayerDices(List<Integer> playerDices) {
+        this.playerDices = playerDices;
+    }
+
+    public int getPlayerVictories() {
+        return playerVictories;
+    }
+
+    public void recordNewVictory(){
+            playerVictories++;
+    }
+
+    @Override
+    public String toString() {
+        return playerId + " - " + playerName;
     }
 }

@@ -1,5 +1,6 @@
 package hr.algebra.java2.liars.dice.marina_spudic_java2.model;
 
+import hr.algebra.java2.liars.dice.marina_spudic_java2.GameScreenController;
 import hr.algebra.java2.liars.dice.marina_spudic_java2.server.Server;
 
 import java.io.IOException;
@@ -33,48 +34,63 @@ public class Client {
         }
     }
 
-    public void listenForGameReady(){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GameMetaData gameMetaData1;
-                while (socket.isConnected()){
-                    try {
-                        System.out.println("i am in listen iz clienta");
-                        gameMetaData1 = (GameMetaData) ois.readObject();
-                        System.out.println(gameMetaData1);
-                        gameMetaData = gameMetaData1;
-                        break;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+    public void listenForGameReady(TransferData transferData){
+        Thread waitingForGameReadyThread = new Thread(() -> {
+            GameMetaData gameMetaData1;
+            while (socket.isConnected()){
+                try {
+                    System.out.println("i am in listen iz clienta waiting for both connection");
+                    gameMetaData1 = (GameMetaData) ois.readObject();
+                    //System.out.println(gameMetaData1);
+                    gameMetaData = gameMetaData1;
+                    System.out.println(gameMetaData);
+                    if (gameMetaData.getPlayerOneData().getPlayerId() == ProcessHandle.current().pid()) {
+                        GameScreenController.enableUI(transferData);
+                    } else {
+                        GameScreenController.disableStaticUI(transferData);
                     }
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GameMetaData opponentFinished;
-                while (socket.isConnected()){
-                    try {
-                        opponentFinished = (GameMetaData) ois.readObject();
-                        gameMetaData = opponentFinished;
-                        System.out.println(gameMetaData);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
+        Thread opponentTurnThread = new Thread(() -> {
+            GameMetaData opponentFinished;
+            while (socket.isConnected()){
+                try {
+                    opponentFinished = (GameMetaData) ois.readObject();
+                    /*if (gameMetaData.getNumberOfDices().isEmpty()) {
+                    Map<Integer, Integer> currentDices = gameMetaData.getNumberOfDices();
+                    System.out.println("Current dices: " + currentDices);
+                    Map<Integer, Integer> opponentFinishedNumberOfDices = opponentFinished.getNumberOfDices();
+                    System.out.println("Opponent dices: " + opponentFinishedNumberOfDices);
+                    Map<Integer, Integer> helperMap = new HashMap<>();
+                    for (Map.Entry<Integer, Integer> entry :
+                            currentDices.entrySet()) {
+                        Integer opponentDiceAppirance = opponentFinishedNumberOfDices.get(entry.getKey());
+                        Integer currentDiceAppirance = entry.getValue();
+                        Integer mergeDices = opponentDiceAppirance + currentDiceAppirance;
+                        helperMap.put(entry.getKey(), mergeDices);
                     }
+                    System.out.println("Merge dices: " + helperMap);
+                    }*/
+                    gameMetaData = opponentFinished;
+                    GameScreenController.enableUI(transferData);
+                    System.out.println(gameMetaData);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
-        thread.start();
+        waitingForGameReadyThread.start();
         try {
-            thread.join();
+            waitingForGameReadyThread.join();
         } catch (InterruptedException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
-        thread2.start();
+        opponentTurnThread.start();
 
     }
 
@@ -119,8 +135,12 @@ public class Client {
         }
     }
 
-    public void sendTurn() throws IOException {
+    public void sendTurn(int lastNumberBid, int lastDiceBid) throws IOException {
         if (this.socket.isConnected()){
+            gameMetaData.setNumberBids(lastNumberBid);
+            gameMetaData.setDiceBids(lastDiceBid);
+            //gameMetaData.setNumberOfDices(numberOfDices);
+            //System.out.println(gameMetaData.getNumberOfDices());
             gameMetaData.setPlayerOneTurn(!gameMetaData.isPlayerOneTurn());
             oos.writeObject(gameMetaData);
         }

@@ -12,16 +12,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.liars.dice.marina_spudic_java2.GameScreenController">
+<AnchorPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: silver;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.liars.dice.marina_spudic_java2.GameScreenController">
    <children>
       <AnchorPane fx:id="apGameMoves" layoutX="35.0" layoutY="305.0" prefHeight="91.0" prefWidth="538.0">
          <children>
             <Button fx:id="btnCallBluff" layoutX="269.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCallBluff" text="Call bluff" />
             <Label layoutX="133.0" layoutY="14.0" text="Opponent says there are ..." />
-            <Label fx:id="lbOpponentsMove" layoutX="381.0" layoutY="14.0" prefHeight="17.0" prefWidth="30.0" />
+            <Label fx:id="lbOpponentsMove" layoutX="280.0" layoutY="14.0" prefHeight="17.0" prefWidth="246.0" />
          </children>
       </AnchorPane>
-      <Button fx:id="btnRollDice" layoutX="361.0" layoutY="80.0" mnemonicParsing="false" onAction="#onRollDicePressed" style="-fx-background-color: black;" text="Roll dice" textFill="WHITE" />
       <AnchorPane fx:id="apPlayer" layoutX="6.0" layoutY="451.0" prefHeight="200.0" prefWidth="612.0">
          <children>
             <ImageView fx:id="playerDiceImageOne" fitHeight="50.0" fitWidth="50.0" layoutX="150.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">

@@ -17,7 +17,8 @@ public class ClientSocketHandler implements Runnable{
     private ObjectOutputStream oos;
 
     private PlayerData playerData;
-    private long tempId;
+
+    private static GameMetaData gameMetaData = new GameMetaData();
 
     public static List<ClientSocketHandler> listOfPlayers = new ArrayList<>();
 
@@ -33,8 +34,17 @@ public class ClientSocketHandler implements Runnable{
             ois = new ObjectInputStream(socket.getInputStream());
             oos = new ObjectOutputStream(socket.getOutputStream());
             this.playerData = (PlayerData) ois.readObject();
+
+            if (listOfPlayers.size() == 0) {
+                System.out.println(playerData + " from client handler first if");
+                gameMetaData.setPlayerOneData(this.playerData);
+            }
+
             listOfPlayers.add(this);
+
             if (listOfPlayers.size() == 2){
+                System.out.println(playerData + " from client handler second if");
+                gameMetaData.setPlayerTwoData(this.playerData);
                 broadcastGameReady();
             }
 
@@ -46,7 +56,6 @@ public class ClientSocketHandler implements Runnable{
     }
 
     private void broadcastGameReady() {
-        GameMetaData gameMetaData = new GameMetaData(true);
         for (ClientSocketHandler clientsockethandler:listOfPlayers) {
             try {
                 clientsockethandler.oos.writeObject(gameMetaData);
@@ -96,7 +105,5 @@ public class ClientSocketHandler implements Runnable{
             e.printStackTrace();
             System.exit(-1);
         }
-
-
     }
 }
