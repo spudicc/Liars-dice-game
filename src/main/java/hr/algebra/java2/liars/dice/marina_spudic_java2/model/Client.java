@@ -60,21 +60,6 @@ public class Client {
             while (socket.isConnected()){
                 try {
                     opponentFinished = (GameMetaData) ois.readObject();
-                    /*if (gameMetaData.getNumberOfDices().isEmpty()) {
-                    Map<Integer, Integer> currentDices = gameMetaData.getNumberOfDices();
-                    System.out.println("Current dices: " + currentDices);
-                    Map<Integer, Integer> opponentFinishedNumberOfDices = opponentFinished.getNumberOfDices();
-                    System.out.println("Opponent dices: " + opponentFinishedNumberOfDices);
-                    Map<Integer, Integer> helperMap = new HashMap<>();
-                    for (Map.Entry<Integer, Integer> entry :
-                            currentDices.entrySet()) {
-                        Integer opponentDiceAppirance = opponentFinishedNumberOfDices.get(entry.getKey());
-                        Integer currentDiceAppirance = entry.getValue();
-                        Integer mergeDices = opponentDiceAppirance + currentDiceAppirance;
-                        helperMap.put(entry.getKey(), mergeDices);
-                    }
-                    System.out.println("Merge dices: " + helperMap);
-                    }*/
                     gameMetaData = opponentFinished;
                     GameScreenController.enableUI(transferData);
                     System.out.println(gameMetaData);
@@ -139,8 +124,6 @@ public class Client {
         if (this.socket.isConnected()){
             gameMetaData.setNumberBids(lastNumberBid);
             gameMetaData.setDiceBids(lastDiceBid);
-            //gameMetaData.setNumberOfDices(numberOfDices);
-            //System.out.println(gameMetaData.getNumberOfDices());
             gameMetaData.setPlayerOneTurn(!gameMetaData.isPlayerOneTurn());
             oos.writeObject(gameMetaData);
         }

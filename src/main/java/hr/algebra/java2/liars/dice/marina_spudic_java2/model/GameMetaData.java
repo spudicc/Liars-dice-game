@@ -11,9 +11,6 @@ public class GameMetaData implements Serializable {
 
     private Map<Integer, Integer> numberOfDices;
 
-    // iz ove mape mogu iscitavati lastnumberbid i lastdice bid, ne trebaju mi gore zakomentirani propsi
-    //private Map<Integer, Integer> gameMoves;
-
     private boolean playerOneTurn;
 
     public void setPlayerOneTurn(boolean playerOneTurn) {

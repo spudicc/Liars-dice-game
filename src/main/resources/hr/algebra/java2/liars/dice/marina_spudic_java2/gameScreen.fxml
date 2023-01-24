@@ -11,49 +11,72 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: silver;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.liars.dice.marina_spudic_java2.GameScreenController">
    <children>
-      <AnchorPane fx:id="apGameMoves" layoutX="35.0" layoutY="305.0" prefHeight="91.0" prefWidth="538.0">
+      <AnchorPane fx:id="apGameMoves" layoutX="30.0" layoutY="128.0" prefHeight="91.0" prefWidth="538.0">
          <children>
-            <Button fx:id="btnCallBluff" layoutX="269.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCallBluff" text="Call bluff" />
-            <Label layoutX="133.0" layoutY="14.0" text="Opponent says there are ..." />
-            <Label fx:id="lbOpponentsMove" layoutX="280.0" layoutY="14.0" prefHeight="17.0" prefWidth="246.0" />
+            <Button fx:id="btnCallBluff" layoutX="460.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCallBluff" prefHeight="37.0" prefWidth="78.0" style="-fx-background-radius: 20; -fx-background-color: black;" text="Call bluff" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Candara" size="13.0" />
+               </font></Button>
+            <Label layoutX="14.0" layoutY="10.0" text="Opponent says there are ...">
+               <font>
+                  <Font name="Candara" size="20.0" />
+               </font></Label>
+            <Label fx:id="lbOpponentsMove" layoutX="242.0" layoutY="10.0" prefHeight="25.0" prefWidth="283.0">
+               <font>
+                  <Font name="Candara" size="20.0" />
+               </font></Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="apPlayer" layoutX="6.0" layoutY="451.0" prefHeight="200.0" prefWidth="612.0">
+      <AnchorPane fx:id="apPlayer" layoutX="16.0" layoutY="290.0" prefHeight="383.0" prefWidth="566.0">
          <children>
-            <ImageView fx:id="playerDiceImageOne" fitHeight="50.0" fitWidth="50.0" layoutX="150.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerDiceImageOne" fitHeight="60.0" fitWidth="60.0" layoutX="20.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../assets/dice1.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="playerDiceImageTwo" fitHeight="50.0" fitWidth="50.0" layoutX="211.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerDiceImageTwo" fitHeight="60.0" fitWidth="60.0" layoutX="20.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../assets/dice1.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="playerDiceImageThree" fitHeight="50.0" fitWidth="50.0" layoutX="274.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerDiceImageThree" fitHeight="60.0" fitWidth="60.0" layoutX="20.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../assets/dice1.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="playerDiceImageFour" fitHeight="50.0" fitWidth="50.0" layoutX="336.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerDiceImageFour" fitHeight="60.0" fitWidth="60.0" layoutX="20.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../assets/dice1.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="playerDiceImageFive" fitHeight="50.0" fitWidth="50.0" layoutX="399.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerDiceImageFive" fitHeight="60.0" fitWidth="60.0" layoutX="20.0" layoutY="283.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../assets/dice1.png" />
                </image>
             </ImageView>
-            <ChoiceBox fx:id="playerNumberChoiceBox" layoutX="211.0" layoutY="24.0" prefHeight="25.0" prefWidth="62.0" />
-            <ChoiceBox fx:id="playerDiceChoiceBox" layoutX="368.0" layoutY="24.0" prefHeight="25.0" prefWidth="62.0" />
-            <Button fx:id="btnPlayerBidHigher" layoutX="289.0" layoutY="59.0" mnemonicParsing="false" onAction="#onBidHigher" text="Bid higher" />
+            <ChoiceBox fx:id="playerNumberChoiceBox" layoutX="177.0" layoutY="137.0" prefHeight="25.0" prefWidth="62.0" />
+            <ChoiceBox fx:id="playerDiceChoiceBox" layoutX="323.0" layoutY="137.0" prefHeight="25.0" prefWidth="62.0" />
+            <Button fx:id="btnPlayerBidHigher" layoutX="227.0" layoutY="224.0" mnemonicParsing="false" onAction="#onBidHigher" prefHeight="47.0" prefWidth="112.0" style="-fx-background-radius: 20; -fx-background-color: black;" text="Bid higher" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Candara" size="18.0" />
+               </font></Button>
+            <Label layoutX="177.0" layoutY="169.0" prefHeight="21.0" prefWidth="89.0" text="how many?">
+               <font>
+                  <Font name="Candara" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="323.0" layoutY="169.0" prefHeight="21.0" prefWidth="89.0" text="which dice?">
+               <font>
+                  <Font name="Candara" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-      <MenuBar layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="212.0">
+      <MenuBar layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="163.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
                <items>
@@ -71,7 +94,9 @@
         </menus>
       </MenuBar>
       <TextArea fx:id="taChatArea" editable="false" layoutX="594.0" layoutY="48.0" prefHeight="342.0" prefWidth="170.0" />
-      <TextField fx:id="tfChatMessage" layoutX="594.0" layoutY="396.0" prefHeight="25.0" prefWidth="170.0" promptText="I know you want to flame.." />
-      <Button fx:id="btnSendMessage" layoutX="702.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="62.0" text="Send" />
+      <TextField fx:id="tfChatMessage" layoutX="594.0" layoutY="396.0" prefHeight="25.0" prefWidth="170.0" promptText="Send a message..." />
+      <Button fx:id="btnSendMessage" layoutX="702.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="62.0" style="-fx-background-radius: 20; -fx-background-color: black;" text="Send" textFill="WHITE" />
+      <Button fx:id="btnShowMoves" disable="true" layoutX="697.0" layoutY="648.0" mnemonicParsing="false" onAction="#showMoves" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: gray;" text="Show moves" textFill="WHITE" />
+      <Button layoutX="181.0" layoutY="2.0" mnemonicParsing="false" onAction="#goBack" prefHeight="15.0" prefWidth="60.0" style="-fx-background-color: gray;" text="back" textFill="WHITE" />
    </children>
 </AnchorPane>

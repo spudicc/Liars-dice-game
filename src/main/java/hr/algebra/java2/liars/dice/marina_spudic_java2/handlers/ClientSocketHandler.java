@@ -27,7 +27,7 @@ public class ClientSocketHandler implements Runnable{
             if (listOfPlayers.size() == 2)
             {
                 socket.close();
-                System.err.println("Too many players sorry not my fathers");
+                System.err.println("Too many players sorry");
                 return;
             }
             this.socket = socket;

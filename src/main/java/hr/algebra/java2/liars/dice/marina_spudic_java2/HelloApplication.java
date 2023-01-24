@@ -15,7 +15,6 @@ public class HelloApplication extends Application {
         mainStage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 600);
-        HelloController helloController = (HelloController) fxmlLoader.getController();
         stage.setTitle("Liar's dice");
         stage.setScene(scene);
         stage.show();
